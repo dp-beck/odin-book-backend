@@ -13,6 +13,7 @@ const UserSchema = new Schema({
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
     friendRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    loggedIn: Boolean,
 });
 
 // Virtual for author's URL
