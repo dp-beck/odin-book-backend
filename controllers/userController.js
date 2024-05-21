@@ -13,7 +13,7 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
 
 // Create a new user
 exports.user_signup = asyncHandler(async (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: User Signup`);
+    res.send(`NOT IMPLEMENTED: User Signup: ${req.body}`);
 });
 
 // Delete a user

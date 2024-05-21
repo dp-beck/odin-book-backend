@@ -3,11 +3,6 @@ const router = express.Router();
 
 const userController = require('../controllers/userController');
 
-/* GET home page. DUMMY CONTENT CURRENTLY TO MAKE SURE TESTING WORKS*/
-router.get('/', function(req, res, next) {
-  res.json({ name: "frodo"});
-});
-
 /* AUTHENTICATION ROUTE */
 
 /* USERS ROUTES */
