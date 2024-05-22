@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userController');
+const postController = require('../controllers/postController');
 
 /* AUTHENTICATION ROUTE */
 
@@ -20,24 +21,33 @@ router.post('/users/signup', userController.user_signup);
 router.delete('/users/delete', userController.user_delete);
 
 // POST update new user details
-router.post('/users/:id/update', userController.user_update);
+router.post('/users/:id(\\d+)/update', userController.user_update);
 
 // POST update active friend request (send friend request)
-router.post('/users/:id/request_friend', userController.user_request_friend)
+router.post('/users/:id(\\d+)/request_friend', userController.user_request_friend)
 
 // POST update users' friends list (accept friend request)
-router.post('/users/:id/accept_friend_request', userController.user_accept_friend_request);
+router.post('/users/:id(\\d+)/accept_friend_request', userController.user_accept_friend_request);
 
 // POST login user
-router.post('/users/:id/login', userController.user_login);
+router.post('/users/:id(\\d+)/login', userController.user_login);
 
 /* POSTS ROUTES */
 
-// GET post text
-// GET comments for a post
+// GET List of Posts
+router.get('/posts', postController.post_list);
+
+// GET post details
+router.get('/posts/:id(\\d+)', postController.get_post);
+
 // POST create new post
+router.post('/posts/create', postController.create_post);
+
 // POST update a post
+router.post('/posts/:id(\\d+)/update', postController.update_post);
+
 // DELETE post
+router.delete('/posts/:id(\\d+)/delete', postController.delete_post);
 
 /* COMMENTS ROUTES */
 

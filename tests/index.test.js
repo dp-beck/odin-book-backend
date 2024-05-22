@@ -55,3 +55,34 @@ test("route for user login returns 200 response code", done => {
     .post('/users/123/login')
     .expect(200, done);
 });
+
+// POST ROUTES TESTS //
+test("posts route returns 200 response code ", done => {
+  request(app)
+    .get('/posts')
+    .expect(200, done);
+});
+
+test("post details route returns 200 response code ", done => {
+  request(app)
+    .get('/posts/123')
+    .expect(200, done);
+});
+
+test("route for post creation returns 200 response code", done => {
+  request(app)
+    .post('/posts/create')
+    .expect(200, done);
+});
+
+test("route for post update returns 200 response code", done => {
+  request(app)
+    .post('/posts/123/update')
+    .expect(200, done);
+});
+
+test("route for post delete returns 200 response code", done => {
+  request(app)
+    .delete('/posts/123/delete')
+    .expect(200, done);
+});
