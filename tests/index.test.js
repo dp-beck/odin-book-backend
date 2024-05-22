@@ -86,3 +86,34 @@ test("route for post delete returns 200 response code", done => {
     .delete('/posts/123/delete')
     .expect(200, done);
 });
+
+// COMMENT ROUTES TESTS //
+test("comments route returns 200 response code ", done => {
+  request(app)
+    .get('/comments')
+    .expect(200, done);
+});
+
+test("comments details route returns 200 response code ", done => {
+  request(app)
+    .get('/comments/123')
+    .expect(200, done);
+});
+
+test("route for comment creation returns 200 response code", done => {
+  request(app)
+    .post('/comments/create')
+    .expect(200, done);
+});
+
+test("route for post update returns 200 response code", done => {
+  request(app)
+    .post('/comments/123/update')
+    .expect(200, done);
+});
+
+test("route for post delete returns 200 response code", done => {
+  request(app)
+    .delete('/comments/123/delete')
+    .expect(200, done);
+});

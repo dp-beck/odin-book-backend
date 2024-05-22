@@ -1,8 +1,11 @@
+// TO DO: CREATE AUTHENTICATION ROUTE
+
 const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userController');
 const postController = require('../controllers/postController');
+const commentController = require('../controllers/commentController');
 
 /* AUTHENTICATION ROUTE */
 
@@ -51,9 +54,20 @@ router.delete('/posts/:id(\\d+)/delete', postController.delete_post);
 
 /* COMMENTS ROUTES */
 
-// GET comment text
-// POST create new comment
+// GET List of Comments
+router.get('/comments', commentController.comment_list);
+
+// GET comment details
+router.get('/comments/:id(\\d+)', commentController.get_comment);
+
+// POST create new post
+router.post('/comments/create', commentController.create_comment);
+
 // POST update a comment
-// DELETE a comment
+router.post('/comments/:id(\\d+)/update', commentController.update_comment);
+
+// DELETE comment
+router.delete('/comments/:id(\\d+)/delete', commentController.delete_comment);
+
 
 module.exports = router;
