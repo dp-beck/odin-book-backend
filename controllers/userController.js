@@ -1,3 +1,5 @@
+// TO DO: IMPLEMENT CONTROLLER FUNCTIONS
+
 const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 
@@ -13,7 +15,7 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
 
 // Create a new user
 exports.user_signup = asyncHandler(async (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: User Signup: ${req.body}`);
+    res.send("NOT IMPLEMENTED: User Signup");
 });
 
 // Delete a user

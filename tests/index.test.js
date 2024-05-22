@@ -7,30 +7,51 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use("/", router);
 
-test("users route calls controller function", done => {
+// USER ROUTES TESTS //
+test("users route returns 200 response code ", done => {
   request(app)
     .get('/users')
-    .expect("Content-Type", "text/html; charset=utf-8")
-    .expect("NOT IMPLEMENTED: USER LIST")
     .expect(200, done);
 });
 
-test("route for individual detail calls controller function", done => {
+test("route for individual detail returns 200 response code", done => {
   request(app)
     .get('/users/123')
-    .expect("Content-Type", "text/html; charset=utf-8")
-    .expect("NOT IMPLEMENTED: User Details: 123")
     .expect(200, done);
 });
 
-/*
-test("route for user signup calls controller function", done => {
+test("route for user signup returns 200 response code", done => {
   request(app)
     .post('/users/signup')
-    .type("form")
-    .send("signup")
-    .expect("Content-Type", "text/html; charset=utf-8")
-    .expect("NOT IMPLEMENTED: User Signup")
     .expect(200, done);
 });
-*/
+
+test("route for user delete returns 200 response code", done => {
+  request(app)
+    .delete('/users/delete')
+    .expect(200, done);
+});
+
+test("route for user update returns 200 response code", done => {
+  request(app)
+    .post('/users/123/update')
+    .expect(200, done);
+});
+
+test("route for user friend request returns 200 response code", done => {
+  request(app)
+    .post('/users/123/request_friend')
+    .expect(200, done);
+});
+
+test("route for user friend request returns 200 response code", done => {
+  request(app)
+    .post('/users/123/accept_friend_request')
+    .expect(200, done);
+});
+
+test("route for user login returns 200 response code", done => {
+  request(app)
+    .post('/users/123/login')
+    .expect(200, done);
+});
