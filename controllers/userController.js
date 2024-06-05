@@ -2,10 +2,18 @@
 
 const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
+const bcrypt = require("bcryptjs");
+const { body, validationResult } = require("express-validator");
 
 // Return a list of all Users
 exports.user_list = asyncHandler(async (req, res, next) => {
-    res.send("NOT IMPLEMENTED: USER LIST");
+    const allUsers = await User.find({})
+        .sort({ userName: 1 })
+        .populate("posts")
+        .populate("friends")
+        .populate("friendRequests")
+        .exec();
+    res.send(allUsers);
 });
 
 // Return details for a specific user
@@ -13,10 +21,63 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
     res.send(`NOT IMPLEMENTED: User Details: ${req.params.id}`);
 });
 
+//TO DO: INTEGRATE PROFILE PHOTO
 // Create a new user
-exports.user_signup = asyncHandler(async (req, res, next) => {
-    res.send("NOT IMPLEMENTED: User Signup");
-});
+exports.user_signup = [
+    body("firstName")
+        .trim()
+        .isLength({ min: 1})
+        .escape()
+        .withMessage("First name must be specified"),
+    body("lastName")
+        .trim()
+        .isLength({ min: 1})
+        .escape()
+        .withMessage("Last name must be specified"),
+    body("userName")
+        .trim()
+        .isLength({ min: 1})
+        .escape()
+        .withMessage("Username must be specified"),
+    body("email")
+        .trim()
+        .isLength({ min: 1})
+        .escape()
+        .withMessage("Email must be specified"),
+    body("password")
+        .trim()
+        .isLength({ min: 8 })
+        .escape()
+        .withMessage("Password must be atleast 8 characters"),
+    body("aboutMe")
+        .trim()
+        .isLength({ min: 1})
+        .escape()
+        .withMessage("About Me must be specified"),
+
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+        const user = new User({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            userName: req.body.userName,
+            aboutMe: req.body.aboutMe,
+            email: req.body.email,
+            password: hashedPassword,
+        });
+
+        if(!errors.isEmpty()) {
+            res.send(errors);
+            return;
+        } else {
+            await user.save();
+            res.send(user);
+        }
+    })
+];
 
 // Delete a user
 exports.user_delete = asyncHandler(async (req, res, next) => {
