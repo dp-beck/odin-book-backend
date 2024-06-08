@@ -4,6 +4,7 @@ const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 
 // Return a list of all Users
 exports.user_list = asyncHandler(async (req, res, next) => {
@@ -18,7 +19,13 @@ exports.user_list = asyncHandler(async (req, res, next) => {
 
 // Return details for a specific user
 exports.user_detail = asyncHandler(async (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: User Details: ${req.params.id}`);
+    const user = await User.findById(req.params.id).exec();
+    if (user === null) {
+        const err = new Error("User not found");
+        err.status = 404;
+        return next(err); 
+    }
+    res.send(user);
 });
 
 //TO DO: INTEGRATE PROFILE PHOTO
@@ -67,6 +74,7 @@ exports.user_signup = [
             aboutMe: req.body.aboutMe,
             email: req.body.email,
             password: hashedPassword,
+            loggedIn: false,
         });
 
         if(!errors.isEmpty()) {
@@ -81,13 +89,59 @@ exports.user_signup = [
 
 // Delete a user
 exports.user_delete = asyncHandler(async (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: User Delete: ${req.params.id}`);
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    res.send(deletedUser);
 });
 
 // Update a user's Details
-exports.user_update = asyncHandler(async (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: User Details Update: ${req.params.id}`);
-});
+exports.user_update = [
+    body("first_name")
+        .trim()
+        .isLength({ min: 1})
+        .escape()
+        .withMessage("First name must be specified"),
+    body("last_name")
+        .trim()
+        .isLength({ min: 1})
+        .escape()
+        .withMessage("Last name must be specified"),
+    body("user_name")
+        .trim()
+        .isLength({ min: 1})
+        .escape()
+        .withMessage("Username must be specified"),
+    body("email")
+        .trim()
+        .isLength({ min: 1})
+        .escape()
+        .withMessage("Email must be specified"),
+    body("aboutMe")
+        .trim()
+        .isLength({ min: 1})
+        .escape()
+        .withMessage("About Me must be specified"),
+
+    asyncHandler(async (req, res, next) => {
+        const errors = validationResult(req);
+        
+        const user = new User({
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            userName: req.body.userName,
+            email: req.body.email,
+            aboutMe: req.body.aboutMe,
+            _id: req.params.id
+        });
+
+        if(!errors.isEmpty()) {
+            res.send(errors);
+            return;
+        } else {
+            const updatedUser = await User.findByIdAndUpdate(req.params.id, user, {});
+            res.send(updatedUser);
+        }
+    })
+];
 
 // Send a Friend Request
 exports.user_request_friend = asyncHandler(async (req, res, next) => {
@@ -101,5 +155,23 @@ exports.user_accept_friend_request = asyncHandler(async (req, res, next) => {
 
 // Log In a User
 exports.user_login = asyncHandler(async (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: Log In User: ${req.params.id}`);
+    let { userName, password } = req.body;
+    const user = await User.findOne({ userName: userName }).exec();
+    if (!user) {
+        return res.status(400).json({ message: "Invalid username or password" });
+    };
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+        return res.status(400).json({ message: "Invalid username or password" });
+    };
+
+    const secret = 'SECRET_KEY'; 
+    const token = jwt.sign({ userName: user.userName }, secret, { expiresIn: "1hr" });
+    
+    return res.status(200).json({
+        message: "Auth Passed",
+        token
+    });
 });
