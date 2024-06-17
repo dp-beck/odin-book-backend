@@ -87,6 +87,17 @@ exports.user_signup = [
     })
 ];
 
+//Upload a Photo
+exports.profilePhoto_upload = (req, res, next) => {
+    const file = req.file;
+    res.send({
+        message: "Uploaded",
+        id: file.id,
+        name: file.filename,
+        contentType: file.contentType,
+    });
+};
+
 // Delete a user
 exports.user_delete = asyncHandler(async (req, res, next) => {
     const deletedUser = await User.findByIdAndDelete(req.params.id);

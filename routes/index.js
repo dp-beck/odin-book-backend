@@ -7,6 +7,8 @@ const userController = require('../controllers/userController');
 const postController = require('../controllers/postController');
 const commentController = require('../controllers/commentController');
 
+const { upload } = require('../middleware/photoStorage');
+
 /* AUTHENTICATION ROUTE */
 
 /* USERS ROUTES */
@@ -34,6 +36,10 @@ router.post('/users/:id/accept_friend_request', userController.user_accept_frien
 
 // POST login user
 router.post('/users/:id/login', userController.user_login);
+
+// TO DO
+// POST upload photo
+router.post('/profile_photos/upload', upload.single('image'), userController.profilePhoto_upload);
 
 /* POSTS ROUTES */
 
