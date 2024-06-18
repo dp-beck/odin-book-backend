@@ -2,7 +2,7 @@ const multer = require('multer');
 const { GridFsStorage } = require('multer-gridfs-storage');
 require("dotenv").config();
 
-const url = process.env.MONGODB_CONNECTION_STRING;
+const url = process.env.MONGODB_URL;
 
 // Create a storage object with a given configuration
 const storage = new GridFsStorage({
@@ -11,7 +11,7 @@ const storage = new GridFsStorage({
       //If it is an image, save to photos bucket
       if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
         return {
-          bucketName: "photos",
+          bucketName: "profile_photos",
           filename: `${Date.now()}_${file.originalname}`,
         }
       } else {

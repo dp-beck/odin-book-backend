@@ -7,7 +7,7 @@ const userController = require('../controllers/userController');
 const postController = require('../controllers/postController');
 const commentController = require('../controllers/commentController');
 
-const { upload } = require('../middleware/photoStorage');
+const photoStorage = require('../middleware/photoStorage');
 
 /* AUTHENTICATION ROUTE */
 
@@ -39,7 +39,7 @@ router.post('/users/:id/login', userController.user_login);
 
 // TO DO
 // POST upload photo
-router.post('/profile_photos/upload', upload.single('image'), userController.profilePhoto_upload);
+router.post('/profile_photos/upload', photoStorage.upload.single('image'), userController.profilePhoto_upload);
 
 /* POSTS ROUTES */
 
