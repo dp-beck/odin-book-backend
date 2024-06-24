@@ -7,7 +7,8 @@ const userController = require('../controllers/userController');
 const postController = require('../controllers/postController');
 const commentController = require('../controllers/commentController');
 
-const photoStorage = require('../middleware/photoStorage');
+const multer = require('multer');
+const upload = multer();
 
 /* AUTHENTICATION ROUTE */
 
@@ -20,7 +21,7 @@ router.get('/users', userController.user_list);
 router.get('/users/:id', userController.user_detail);
 
 // POST create new user
-router.post('/users/signup', userController.user_signup);
+router.post('/users/signup', upload.single('image'), userController.user_signup);
 
 // DELETE user
 router.delete('/users/:id/delete', userController.user_delete);
@@ -36,10 +37,6 @@ router.post('/users/:id/accept_friend_request', userController.user_accept_frien
 
 // POST login user
 router.post('/users/:id/login', userController.user_login);
-
-// TO DO
-// POST upload photo
-router.post('/profile_photos/upload', photoStorage.upload.single('image'), userController.profilePhoto_upload);
 
 /* POSTS ROUTES */
 

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-   profilePhoto: { type: Schema.Types.ObjectId, ref: "ProfilePhoto" }, // Storing photos as binary data directly in the MongoDB document
+    profilePhotoUrl: { type: String }, // THIS WILL STORE A CLOUDINARY URL
     userName: { type: String, required: true, maxLength: 100 },
     password: { type: String, required: true, maxLength: 100, minLength: 6 },
     firstName: { type: String, required: true, maxLength: 100 },

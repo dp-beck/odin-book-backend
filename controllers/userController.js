@@ -6,6 +6,12 @@ const bcrypt = require("bcryptjs");
 const { body, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 
+// Cloudinary is used to store profile photos on the cloud.
+const cloudinary = require('cloudinary').v2;
+
+// Streamifier is used to read the contents of the uploaded profile photo directly from buffer and send to Cloudinary.
+const streamifier = require('streamifier');
+
 // Return a list of all Users
 exports.user_list = asyncHandler(async (req, res, next) => {
     const allUsers = await User.find({})
@@ -28,9 +34,9 @@ exports.user_detail = asyncHandler(async (req, res, next) => {
     res.send(user);
 });
 
-//TO DO: INTEGRATE PROFILE PHOTO
 // Create a new user
 exports.user_signup = [
+    // Validation of form is handled here.
     body("firstName")
         .trim()
         .isLength({ min: 1})
@@ -62,12 +68,34 @@ exports.user_signup = [
         .escape()
         .withMessage("About Me must be specified"),
 
+    /* This function first uploads the attached profile photo to cloudinary, then creates and saves a new user into the database. 
+        The user entry in the database includes a reference to the Cloudinary url where the profile photo resides.
+    */
     asyncHandler(async (req, res, next) => {
+        let streamUpload = (req) => {
+            return new Promise((resolve, reject) => {
+                let stream = cloudinary.uploader.upload_stream(
+                    (error, result) => {
+                        if (result) {
+                            resolve(result);
+                        } else {
+                            reject(error);
+                        }
+                    }
+                );
+                streamifier.createReadStream(req.file.buffer).pipe(stream);
+            });
+        };
+
+        let uploadResult = await streamUpload(req);
+        console.log(uploadResult);
+
         const errors = validationResult(req);
 
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
         const user = new User({
+            profilePhotoUrl: uploadResult.url,
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             userName: req.body.userName,
@@ -86,17 +114,6 @@ exports.user_signup = [
         }
     })
 ];
-
-//Upload a Photo
-exports.profilePhoto_upload = (req, res, next) => {
-    const file = req.file;
-    res.send({
-        message: "Uploaded",
-        id: file.id,
-        name: file.filename,
-        contentType: file.contentType,
-    });
-};
 
 // Delete a user
 exports.user_delete = asyncHandler(async (req, res, next) => {
