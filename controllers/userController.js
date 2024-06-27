@@ -1,4 +1,3 @@
-// TO DO: IMPLEMENT CONTROLLER FUNCTIONS
 
 const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
@@ -173,12 +172,29 @@ exports.user_update = [
 
 // Send a Friend Request
 exports.user_request_friend = asyncHandler(async (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: Send a Friend Request from: ${req.params.id}`);
+    const user = await User.findById(req.params.id);
+    if (user.friendRequests.includes(req.body.id)) {
+        res.send("You have already requested to be this user's friend.");
+    } else if (user.friends.includes(req.body.id)) {
+        res.send("You are already friends with this user.")
+    } else {
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id, 
+            {$push: {friendRequests: req.body.id}},
+            {}
+        ); 
+        res.send(updatedUser);
+    }
 });
 
 // Accept a Friend Request
 exports.user_accept_friend_request = asyncHandler(async (req, res, next) => {
-    res.send(`NOT IMPLEMENTED: Accept a Friend Request for: ${req.params.id}`);
+    const updatedUser = await User.findByIdAndUpdate(
+        req.params.id, 
+        {$push: {friends: req.body.id}},
+        {}
+    ); 
+    res.send(updatedUser);
 });
 
 // Log In a User
