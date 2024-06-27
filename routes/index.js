@@ -55,6 +55,9 @@ router.post('/posts/:id/update', postController.update_post);
 // DELETE post
 router.delete('/posts/:id/delete', postController.delete_post);
 
+// POST Add like to post
+router.post('/posts/:id/like', postController.like_post);
+
 /* COMMENTS ROUTES */
 
 // GET List of Comments

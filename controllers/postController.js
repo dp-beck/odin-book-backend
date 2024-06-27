@@ -85,3 +85,18 @@ exports.delete_post = asyncHandler(async (req, res, next) => {
     const deletedPost = await Post.findByIdAndDelete(req.params.id);
     res.send(deletedPost);
 });
+
+// POST Add Like to Post
+exports.like_post = asyncHandler(async (req, res, next) => {
+    const post = await Post.findById(req.params.id);
+    if (post.likes.includes(req.body.id)) {
+        res.send("You have already liked this post.");
+    } else {
+        const updatedPost = await Post.findByIdAndUpdate(
+            req.params.id, 
+            {$push: {likes: req.body.id}},
+            {}
+        ); 
+        res.send(updatedPost);
+    }
+});
