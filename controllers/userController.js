@@ -170,8 +170,8 @@ exports.user_update = [
     })
 ];
 
-// Send a Friend Request
-exports.user_request_friend = asyncHandler(async (req, res, next) => {
+// Receive a Friend Request
+exports.receive_friend_request = asyncHandler(async (req, res, next) => {
     const user = await User.findById(req.params.id);
     if (user.friendRequests.includes(req.body.id)) {
         res.send("You have already requested to be this user's friend.");
@@ -188,7 +188,7 @@ exports.user_request_friend = asyncHandler(async (req, res, next) => {
 });
 
 // Accept a Friend Request
-exports.user_accept_friend_request = asyncHandler(async (req, res, next) => {
+exports.accept_friend_request = asyncHandler(async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(
         req.params.id, 
         {$push: {friends: req.body.id}},

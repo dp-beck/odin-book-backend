@@ -29,11 +29,11 @@ router.delete('/users/:id/delete', userController.user_delete);
 // POST update new user details
 router.post('/users/:id/update', userController.user_update);
 
-// POST update active friend request (send friend request)
-router.post('/users/:id/request_friend', userController.user_request_friend)
+// POST update active friend request (receive friend request)
+router.post('/users/:id/receive_friend_request', userController.receive_friend_request)
 
 // POST update users' friends list (accept friend request)
-router.post('/users/:id/accept_friend_request', userController.user_accept_friend_request);
+router.post('/users/:id/accept_friend_request', userController.accept_friend_request);
 
 // POST login user
 router.post('/users/:id/login', userController.user_login);
@@ -58,6 +58,9 @@ router.delete('/posts/:id/delete', postController.delete_post);
 // POST Add like to post
 router.post('/posts/:id/like', postController.like_post);
 
+// POST Add comment to post
+router.post('/posts/:id/comment', postController.comment_post);
+
 /* COMMENTS ROUTES */
 
 // GET List of Comments
@@ -66,7 +69,7 @@ router.get('/comments', commentController.comment_list);
 // GET comment details
 router.get('/comments/:id', commentController.get_comment);
 
-// POST create new post
+// POST create new comment
 router.post('/comments/create', commentController.create_comment);
 
 // POST update a comment

@@ -17,6 +17,8 @@ exports.post_list = asyncHandler(async (req, res, next) => {
 exports.get_post = asyncHandler(async (req, res, next) => {
     const post = await Post.findById(req.params.id)
         .populate("author")
+        .populate("likes")
+        .populat("comments")
         .exec();
     
         if (post === null) {
@@ -75,7 +77,7 @@ exports.update_post = [
             return;
         } else {
             const updatedPost = await Post.findByIdAndUpdate(req.params.id, post, {});
-            res.send(updatePost);
+            res.send(updatedPost);
         }
     })
 ]
@@ -89,12 +91,27 @@ exports.delete_post = asyncHandler(async (req, res, next) => {
 // POST Add Like to Post
 exports.like_post = asyncHandler(async (req, res, next) => {
     const post = await Post.findById(req.params.id);
-    if (post.likes.includes(req.body.id)) {
+    if (post.likes.includes(req.body.LikerId)) {
         res.send("You have already liked this post.");
     } else {
         const updatedPost = await Post.findByIdAndUpdate(
             req.params.id, 
-            {$push: {likes: req.body.id}},
+            {$push: {likes: req.body.LikerId}},
+            {}
+        ); 
+        res.send(updatedPost);
+    }
+});
+
+// POST Add Comment to Post
+exports.comment_post = asyncHandler(async (req, res, next) => {
+    const post = await Post.findById(req.params.id);
+    if (post.comments.includes(req.body.CommentId)) {
+        res.send("This comment has already been added to this post.");
+    } else {
+        const updatedPost = await Post.findByIdAndUpdate(
+            req.params.id, 
+            {$push: {comments: req.body.CommentId}},
             {}
         ); 
         res.send(updatedPost);
