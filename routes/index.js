@@ -35,7 +35,7 @@ router.post('/users/:id/receive_friend_request', userController.receive_friend_r
 // POST update users' friends list (accept friend request)
 router.post('/users/:id/accept_friend_request', userController.accept_friend_request);
 
-// POST login user
+// POST login user -- IN PROGRESS --
 router.post('/users/:id/login', userController.user_login);
 
 /* POSTS ROUTES */
