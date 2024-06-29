@@ -122,17 +122,17 @@ exports.user_delete = asyncHandler(async (req, res, next) => {
 
 // Update a user's Details
 exports.user_update = [
-    body("first_name")
+    body("firstName")
         .trim()
         .isLength({ min: 1})
         .escape()
         .withMessage("First name must be specified"),
-    body("last_name")
+    body("lastName")
         .trim()
         .isLength({ min: 1})
         .escape()
         .withMessage("Last name must be specified"),
-    body("user_name")
+    body("userName")
         .trim()
         .isLength({ min: 1})
         .escape()
@@ -189,12 +189,18 @@ exports.receive_friend_request = asyncHandler(async (req, res, next) => {
 
 // Accept a Friend Request
 exports.accept_friend_request = asyncHandler(async (req, res, next) => {
-    const updatedUser = await User.findByIdAndUpdate(
-        req.params.id, 
-        {$push: {friends: req.body.id}},
-        {}
-    ); 
-    res.send(updatedUser);
+    const user = await User.findById(req.params.id);
+    if (user.friendRequests.includes(req.body.id)) {
+        const updatedUser = await User.findByIdAndUpdate(
+            req.params.id, 
+            {$push: {friends: req.body.id},
+             $pull: {friendRequests: req.body.id}},
+            {}
+        ); 
+        res.send(updatedUser);
+    } else {
+        res.send("This user has not yet sent you a friend request.");
+    }
 });
 
 // Log In a User
