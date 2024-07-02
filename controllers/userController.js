@@ -220,8 +220,25 @@ exports.user_login = asyncHandler(async (req, res, next) => {
     const secret = 'SECRET_KEY'; 
     const token = jwt.sign({ userName: user.userName }, secret, { expiresIn: "1hr" });
     
+    const loggedInUser = await User.findByIdAndUpdate(req.params.id, {loggedIn: true}, {});
+        
     return res.status(200).json({
-        message: "Auth Passed",
+        message: "Auth Passed, Logged In",
         token
     });
+});
+
+// LOG OUT FUNCTION
+exports.user_logout = asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.params.id);
+    if (!user.loggedIn) {
+        res.send("You are not logged in.");
+    } else {
+        const loggedOutUser = await User.findByIdAndUpdate(
+            req.params.id, 
+            {loggedIn: false},
+            {}
+        ); 
+        res.send(`${loggedOutUser.userName} is now logged out.`);
+    }
 });

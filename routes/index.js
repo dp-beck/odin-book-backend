@@ -10,7 +10,15 @@ const commentController = require('../controllers/commentController');
 const multer = require('multer');
 const upload = multer();
 
+const passport = require('passport');
+const JwtStrategy = require('./strategies/jwt.js');
+passport.use(JwtStrategy);
+
+
 /* AUTHENTICATION ROUTE */
+router.get('/protected', passport.authenticate('jwt', { session: false}), (req, res, next) => {
+    return res.send(req.user);
+});
 
 /* USERS ROUTES */
 
@@ -35,8 +43,11 @@ router.post('/users/:id/receive_friend_request', userController.receive_friend_r
 // POST update users' friends list (accept friend request)
 router.post('/users/:id/accept_friend_request', userController.accept_friend_request);
 
-// POST login user -- IN PROGRESS --
+// POST login user
 router.post('/users/:id/login', userController.user_login);
+
+// POST Logout user
+router.post('users/:id/logout', userController.user_logout);
 
 /* POSTS ROUTES */
 
