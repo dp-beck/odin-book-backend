@@ -1,5 +1,3 @@
-// TO DO: CREATE AUTHENTICATION ROUTE
-
 const express = require('express');
 const router = express.Router();
 
