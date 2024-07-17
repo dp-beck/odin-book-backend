@@ -87,5 +87,4 @@ router.post('/comments/:id/update', commentController.update_comment);
 // DELETE comment
 router.delete('/comments/:id/delete', commentController.delete_comment);
 
-
 module.exports = router;
