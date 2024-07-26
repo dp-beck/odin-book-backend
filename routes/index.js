@@ -42,7 +42,7 @@ router.post('/users/:id/receive_friend_request', userController.receive_friend_r
 router.post('/users/:id/accept_friend_request', userController.accept_friend_request);
 
 // POST login user
-router.post('/users/:id/login', userController.user_login);
+router.post('/users/login', userController.user_login);
 
 // POST Logout user
 router.post('users/:id/logout', userController.user_logout);

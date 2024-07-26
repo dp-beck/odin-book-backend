@@ -220,7 +220,7 @@ exports.user_login = asyncHandler(async (req, res, next) => {
     const secret = 'SECRET_KEY'; 
     const token = jwt.sign({ userName: user.userName }, secret, { expiresIn: "1hr" });
     
-    const loggedInUser = await User.findByIdAndUpdate(req.params.id, {loggedIn: true}, {});
+    const loggedInUser = await User.findByIdAndUpdate(user._id, {loggedIn: true}, {});
         
     return res.status(200).json({
         message: "Auth Passed, Logged In",
