@@ -8,7 +8,12 @@ exports.post_list = asyncHandler(async (req, res, next) => {
         .sort({ createdAt: -1 })
         .populate("author")
         .populate("likes")
-        .populate("comments")
+        .populate({
+            path: "comments",
+            populate: {
+                path: "author"
+            }
+        })
         .exec();
     res.send(allPosts);
 });
@@ -18,7 +23,12 @@ exports.get_post = asyncHandler(async (req, res, next) => {
     const post = await Post.findById(req.params.id)
         .populate("author")
         .populate("likes")
-        .populate("comments")
+        .populate({
+            path: "comments",
+            populate: {
+                path: "author"
+            }
+        })
         .exec();
     
         if (post === null) {
