@@ -92,7 +92,9 @@ exports.delete_post = asyncHandler(async (req, res, next) => {
 exports.like_post = asyncHandler(async (req, res, next) => {
     const post = await Post.findById(req.params.id);
     if (post.likes.includes(req.body.likerId)) {
-        res.send("You have already liked this post.");
+        let msg = {alreadyLiked: true,
+            msg: "You have already liked this post."};
+        res.json(msg);
     } else {
         const updatedPost = await Post.findByIdAndUpdate(
             req.params.id, 
